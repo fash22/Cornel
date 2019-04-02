@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, make_response, url_for, a
 import flask_login as session_login
 from authentication.forms import LoginInformationForm
 from models import User
-
+from werkzeug.exceptions import BadRequest
 blueprint = Blueprint('authentication', __name__, url_prefix='/authentication', static_folder='static', template_folder='templates')
 
 login_manager = session_login.LoginManager()
