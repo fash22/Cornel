@@ -1,8 +1,10 @@
 from flask import Blueprint, render_template, request, make_response, url_for, abort, jsonify, redirect
 import flask_login as session_login
-from authentication.forms import LoginInformationForm
-from models import User
-from werkzeug.exceptions import BadRequest
+from authentication.forms import LoginInformationForm, UserInformationForm
+from models import User, db
+from werkzeug.exceptions import BadRequest, Unauthorized, Forbidden
+from sqlalchemy.exc import IntegrityError
+
 blueprint = Blueprint('authentication', __name__, url_prefix='/authentication', static_folder='static', template_folder='templates')
 
 login_manager = session_login.LoginManager()
@@ -27,6 +29,19 @@ def user_to_dict(user_obj):
 def load_user(user_id):
     return User.query.filter_by(id=user_id).first_or_404()
 
+# ==============================ACCOUNT AUTHORIZATION DECORATORs==============================
+from functools import wraps
+def developer_required(func):
+    """ Decorator to restrict access from other accounts except for developers """
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if session_login.current_user.account_type != 0:               # 0 - Developer Account
+            return abort(Unauthorized.code)
+        else:
+            return func(*args, **kwargs)
+
+    return wrapper
+
 @blueprint.route('/', methods=['GET', 'POST'])
 def login():
     form = LoginInformationForm()
@@ -44,3 +59,75 @@ def login():
 def logout():
     session_login.logout_user()
     return redirect(url_for('authentication.login'))
+
+
+
+# DEVELOPER ROUTES for User Account Management
+@blueprint.route('/users')
+@session_login.login_required
+@developer_required
+def users():
+    """ Lists all users """                 
+    form = UserInformationForm()
+    users = User.query.all()
+    if request.args.get('q', '') == 'users':                    # API request
+        users_dict = list()
+        for user in users:
+            users_dict.append(user_to_dict(user))
+        return make_response(jsonify(users_dict))
+    return render_template('users/users.html', users=users)
+
+@blueprint.route('/user/create', methods=['GET', 'POST'])
+@session_login.login_required
+@developer_required
+def create_user():
+    form = UserInformationForm()
+    if request.method == 'POST':
+        u = User(
+            username=form.username.data, email=form.email.data, password=form.password.data,
+            firstname=form.firstname.data, middlename=form.middlename.data,lastname=form.lastname.data,
+            account_type=int(form.account_type.data), gender=int(form.gender.data)
+        )
+        try:
+            db.session.add(u)
+            db.session.commit()
+            return redirect(url_for('authentication.users'))
+        except IntegrityError as err:
+            db.session.rollback()
+            return render_template('users/user.html', form=form, type='Add', error='Username was already used')
+    return render_template('users/create.html', form=form, type='Add')
+
+@blueprint.route('/user/update/<username>', methods=['GET', 'POST'])
+@session_login.login_required
+@developer_required
+def update_user(username):
+    u = User.query.filter_by(username=username).first_or_404()
+    form = UserInformationForm()
+    if request.method == 'POST':
+        u.username=form.username.data
+        u.email=form.email.data
+        u.password=form.password.data
+        u.firstname=form.firstname.data
+        u.middlename=form.middlename.data
+        u.lastname=form.lastname.data
+        u.account_type=int(form.account_type.data)
+        u.gender=int(form.gender.data)
+
+        try:
+            db.session.add(u)
+            db.session.commit()
+            return redirect(url_for('authentication.users'))
+        except IntegrityError as err:
+            db.session.rollback()
+            return render_template('users/update.html', form=form, error='Username was already used')
+
+    return render_template('users/update.html', form=form, user=u)
+
+@blueprint.route('/user/delete/<username>')
+@session_login.login_required
+@developer_required
+def delete_user(username):
+    u = User.query.filter_by(username=username).first_or_404()
+    db.session.delete(u)
+    db.session.commit()
+    return redirect(url_for('authentication.users'))

@@ -52,6 +52,7 @@
                                         dataType: "json",
                                         success: function(response) {
                                             alert("Welcome, " + response.username);
+                                            window.location.href = "{{ url_for('authentication.users') }}";
                                         },
                                         error: function(xhr, status, error) {
                                             if (error == "NOT FOUND") {
