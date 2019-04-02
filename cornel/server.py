@@ -1,7 +1,12 @@
 from flask import Flask, render_template, url_for, redirect, abort
+from config import Configuration, DevelopmentConfig
 
 app = Flask(__name__)
+app.config.from_object(DevelopmentConfig)
 
+# Extension Modules
+from flask_sqlalchemy import SQLAlchemy
+db = SQLAlchemy(app)
 
 @app.route('/')
 def index():
