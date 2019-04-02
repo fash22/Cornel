@@ -1,0 +1,11 @@
+.bg-color-danger {
+    background-color: #f44336 !important;
+}
+.color-danger {
+    color: #f44336 !important;
+}
+
+dialog {
+    border-width:0;
+    padding: 0;
+}

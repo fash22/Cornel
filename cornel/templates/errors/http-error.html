@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>ERROR {{ error['code'] }} - {{ error['name'] }}</title>
+        <meta name="description" content="The Cornel Online Store HTTP Error Message">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link href="{{ url_for('static', filename='css/tent/cornels.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/tent/utils.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/icono/icono.min.css') }}" rel="stylesheet">
+
+        <link rel="icon" href="//css.sitetent.com/public/img/favicon.png">
+    </head>
+    <body>
+        <header class="masthead bg-color-secondary inverse padding-y padding-xs">
+            <div class="container">
+                <div class="grid grid--center">
+                    <div class="grid__column">
+                        <h1 class="title title--xl">ERROR: {{ error['code'] }}</h1>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <section class="masthero bg-color-lighter padding-xxxl padding-y">
+            <div class="container">
+                <div class="grid grid--justify-center">
+                    <div class="grid__column grid__column--12 grid__column--6--md type-center">
+                        <div class="title-set">
+                            <h1 class="title title--xxxl">{{ error['name'] }}</h1>
+                            <h2 class="subtitle subtitle--md">{{ error['desc'] }}</h2>
+                            <a href="#" class="button button--filled button--secondary"><i class="icono-home"></i>Home</a>
+                            <a href="#" class="button button--outlined button--secondary"><i class="icono-signOut"></i>Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <main class="mastcontent">
+            <section class="intro-copy padding-y padding-lg">
+                <div class="container">
+                    <div class="grid">
+                        <div class="grid__column grid__column--12 grid__column--12--md type-center">
+                            <h3 class="title title--xl icono-terminal"></h3>
+                            <p>
+                                {{ error['details'] }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <hr>
+                </div>
+            </section>
+        </main>
+        <footer class="mastfoot padding-sm padding-y bg-color-dark inverse">
+            <div class="container">
+                <div class="grid">
+                    <div class="grid__column">
+                        <address>
+                            <p>Brought to you by: <a href="mailto:jrfaciolan@outlook.com" style="color:white">fash22</a></p>
+                        </address>
+                    </div>
+                </div>
+            </div>
+        </footer>
+	</body>
+</html>
