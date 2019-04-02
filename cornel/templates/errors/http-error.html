@@ -30,8 +30,12 @@
                         <div class="title-set">
                             <h1 class="title title--xxxl">{{ error['name'] }}</h1>
                             <h2 class="subtitle subtitle--md">{{ error['desc'] }}</h2>
-                            <a href="#" class="button button--filled button--secondary"><i class="icono-home"></i>Home</a>
-                            <a href="#" class="button button--outlined button--secondary"><i class="icono-signOut"></i>Logout</a>
+                            {% if current_user.is_anonymous %}
+                            <a href="{{ url_for('authentication.login') }}" class="button button--filled button--secondary"><i class="icono-signIn"></i>Login</a>
+                            {% endif %}
+                            {% if current_user.is_authenticated %}
+                            <a href="{{ url_for('authentication.logout') }}" class="button button--outlined button--secondary"><i class="icono-signOut"></i>Logout</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
