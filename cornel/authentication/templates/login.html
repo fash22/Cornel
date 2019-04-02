@@ -55,16 +55,24 @@
                                         },
                                         error: function(xhr, status, error) {
                                             if (error == "NOT FOUND") {
-                                                document.querySelector('#not_found_modal').showModal();
-                                                setTimeout(() =>{
-                                                    setTimeout(document.querySelector('#not_found_modal').close(), 1000);
-                                                }, 1000);
+                                                try {
+                                                    document.querySelector('#not_found_modal').showModal();
+                                                    setTimeout(() =>{
+                                                        setTimeout(document.querySelector('#not_found_modal').close(), 1000);
+                                                    }, 1000);
+                                                } catch (TypeError) {
+                                                    alert("Account Not Found")
+                                                }
                                             }
                                             if (error == "BAD REQUEST") {
-                                                document.querySelector('#incorrect_password_modal').showModal();
-                                                setTimeout(() =>{
-                                                    setTimeout(document.querySelector('#incorrect_password_modal').close(), 1000);
-                                                }, 1000);
+                                                try {
+                                                    document.querySelector('#incorrect_password_modal').showModal();
+                                                    setTimeout(() =>{
+                                                        setTimeout(document.querySelector('#incorrect_password_modal').close(), 1000);
+                                                    }, 1000);
+                                                } catch (TypeError) {
+                                                    alert("Incorrect Password")
+                                                }
                                             }
                                         }
                                     });
