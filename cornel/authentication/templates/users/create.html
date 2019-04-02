@@ -1,0 +1,111 @@
+<!-- Creating and  Updating User Accounts -->
+{% extends 'base/tent/base.html' %} {% block title %}Create User - Account Manager{% endblock %} {% block body %}
+<header class="masthead">
+    <div class="card">
+        <div class="card__content bg-color-primary">
+            <div class="grid">
+                <div class="grid__column">
+                    <h1 class="title--lg color-lightest">Account Manager</h1>
+                </div>
+                <div class="grid__column type-right">
+                    <a href="{{ url_for('authentication.logout') }}" class="color-light">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<main class="mastcontent">
+    <div class="container">
+        <div class="card card--raised padding-xxs">
+            <div class="card__content">
+                <h1 class="color-primary">Create New User Account</h1>
+                {% if error %}
+                <p class="type-italic" style="color: #d50000">{{ error }}</p>
+                {% endif %}
+                <form method="POST">
+                    <div class="grid">
+                        <div class="grid__column">
+                            <div class="control control--block">
+                                {{ form.email.label(class='control__label') }}
+                                {{ form.email(class='control__input') }}
+                            </div>
+                        </div>
+                        <div class="grid__column">
+                            <div class="control control--block">
+                                {{ form.account_type.label(class='control__label') }}
+                                {{ form.account_type(class='control__input') }}
+                            </div>
+                        </div>
+                        <div class="grid__column">
+                            <div class="control control--block">
+                                {{ form.gender.label(class='control__label') }}
+                                {{ form.gender(class='control__input') }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="grid__column">
+                            <div class="control control--block">
+                                {{ form.username.label(class='control__label') }}
+                                {{ form.username(class='control__input') }}
+                            </div>
+                        </div>
+                        <div class="grid__column">
+                            <div class="control control--block">
+                                {{ form.password.label(class='control__label') }}
+                                {{ form.password(class='control__input') }}
+                            </div>
+                        </div>
+                        <div class="grid__column">
+                            <div class="control control--block">
+                                {{ form.vpassword.label(class='control__label') }}
+                                {{ form.vpassword(class='control__input') }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="grid__column">
+                            <div class="control control--block">
+                                {{ form.firstname.label(class='control__label') }}
+                                {{ form.firstname(class='control__input') }}
+                            </div>
+                        </div>
+                        <div class="grid__column">
+                            <div class="control control--block">
+                                {{ form.middlename.label(class='control__label') }}
+                                {{ form.middlename(class='control__input') }}
+                            </div>
+                        </div>
+                        <div class="grid__column">
+                            <div class="control control--block">
+                                {{ form.lastname.label(class='control__label') }}
+                                {{ form.lastname(class='control__input') }}
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+
+                    <!-- Modals -->
+                    <dialog id="password_unmatched_modal">
+                        <div class="card--filled padding-sm">
+                            <p class="color-lightest">Passwords do not match</p>
+                        </div>
+                    </dialog>
+                    <button type="submit" class="button  button--filled button--secondary">Create User</button>
+                    <button type="reset" class="button button--outlined">Clear Form</button>
+                </form>
+                <script src="{{ url_for('static', filename='js/jquery-3.3.1.min.js') }}"></script>
+                <script>
+                    $(document).ready(function () {
+                        $('form').submit(function (e) { 
+                            e.preventDefault();
+                            if($('#password').val() == $('#vpassword').val()){ this.submit() }
+                            else { document.querySelector('#password_unmatched_modal').showModal(); }
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

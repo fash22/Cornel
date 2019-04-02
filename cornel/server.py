@@ -4,9 +4,14 @@ from config import Configuration, DevelopmentConfig
 app = Flask(__name__)
 app.config.from_object(DevelopmentConfig)
 
-# Extension Modules
-from flask_sqlalchemy import SQLAlchemy
-db = SQLAlchemy(app)
+# Blueprint Registration
+from authentication.views import blueprint as auth
+app.register_blueprint(auth)
+
+from models import db
+db.init_app(app)
+from authentication.views import login_manager
+login_manager.init_app(app)
 
 @app.route('/')
 def index():
@@ -53,4 +58,4 @@ def not_found(e):
     return render_template('errors/http-error.html', error=error),exceptions.NotFound.code
 
 if __name__ == '__main__':
-    app.run(ssl_context=('cert.pem', 'key.pem'))
+    app.run(debug=True,ssl_context=('cert.pem', 'key.pem'))

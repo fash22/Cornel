@@ -1,0 +1,59 @@
+{% extends 'base/tent/base.html' %}
+{% block title %}{{ type }} Home - Account Manager {% endblock %}
+{% block body %}
+<style>
+    #add_user {
+        position: fixed;
+        display: block;
+        right: 0;
+        bottom: 0;
+        margin-right: 40px;
+        margin-bottom: 40px;
+        z-index: 900;
+
+        border-radius: 5rem;
+    }
+</style>
+<header class="masthead">
+    <div class="card">
+        <div class="card__content bg-color-primary">
+            <div class="grid">
+                <div class="grid__column">
+                    <h1 class="title--lg color-lightest">Account Manager</h1>
+                </div>
+                <div class="grid__column type-right">
+                    <a href="{{ url_for('authentication.logout') }}" class="color-light">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<main class="mastcontent">
+    <a href="{{ url_for('authentication.create_user') }}" class="button button--filled button--secondary" id="add_user"><i class="icono-plus"></i>Add User</a>
+    <div class="grid">
+        {% for user in users %}
+        <div class="grid__column grid__column--4--lg grid__column--6--md">
+            <div class="card card--raised padding-sm" style="height: inherit;">
+                <header class="type-center">
+                    <i class="icono-user"></i>
+                    <p>{{ user.username }}</p>
+                    <a href="mailto:{{ user.email }}">{{ user.email }}</a>
+                </header>
+                <div class="card__content type-center">
+                    <p class="type-uppercase type-bold">{{ user.firstname }} {{ user.middlename }} {{ user.lastname }}</p>
+                    {% if user.gender == 0 %}<p>Female</p>{% endif %}
+                    {% if user.gender == 1 %}<p>Male</p>{% endif %}
+                    {% if user.account_type == 0 %}<p class="type-italic">Developer</p>{% endif %}
+                    {% if user.account_type == 1 %}<p class="type-italic">Supplies Officer</p>{% endif %}
+                    {% if user.account_type == 2 %}<p class="type-italic">Cashier</p>{% endif %}
+                    {% if user.account_type == 3 %}<p class="type-italic">Customer</p>{% endif %}
+                    <hr>
+                    <a href="{{ url_for('authentication.update_user', username=user.username) }}" class="button button--xs button--filled button--tertiary"><i class="icono-rename"></i> Edit</a>
+                    <a href="{{ url_for('authentication.delete_user', username=user.username) }}" class="button button--xs button--outlined"><i class="icono-trash"></i> Delete</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</main>
+{% endblock %}

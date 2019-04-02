@@ -1,0 +1,74 @@
+{% extends 'base/tent/base.html' %} {% block title %}Cornel Login{% endblock %} {% block body %}
+<header class="masthead">
+    <div class="card">
+        <div class="card__content bg-color-primary">
+            <a href="/" class="title--lg color-lightest">Cornel Account Login</a>
+        </div>
+    </div>
+</header>
+<main class="mastconent">
+    <div class="grid grid--justify-center grid--center">
+        <div class="grid__column grid__column--4--lg grid__column--8--md">
+            <div class="card card--raised">
+                <div class="card__content">
+                    <h1 class="title--xl color-primary type-center">Cornel Store</h1>
+                    <form method="POST" id="login_form">
+                        <div class="control control--block">
+                            {{ form.username.label(class='control__label') }}
+                            {{ form.username(class='control__input') }}
+                        </div>
+                        <div class="control control--block">
+                            {{ form.password.label(class='control__label') }}
+                            {{ form.password(class='control__input') }}
+                        </div>
+                        <div class="type-center">
+                            <button type="submit" class="button button--filled button--secondary">Sign-In</button>
+                            <a href="#" class="button button--outlined button--secondary">Sign-Up</a>
+                        </div>
+
+                        <!-- Modals -->
+                        <dialog id="not_found_modal">
+                            <div class="card--filled padding-sm">
+                                <p class="color-lightest">Account Not Found</p>
+                            </div>
+                        </dialog>
+                        <dialog id="incorrect_password_modal" style="border-width:0">
+                            <div class="card--filled padding-sm">
+                                <p class="color-lightest">Incorrect Password</p>
+                            </div>
+                        </dialog>
+                        <script src="{{ url_for('static', filename='js/jquery-3.3.1.min.js') }}"></script>
+                        <script>
+                            $(document).ready(
+                                $("#login_form").submit(function(e) {
+                                    e.preventDefault();
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "{{ url_for('authentication.login') }}",
+                                        data: {
+                                            username: $("#username").val(),
+                                            password: $("#password").val()
+                                        },
+                                        dataType: "json",
+                                        success: function(response) {
+                                            alert("Welcome, " + response.username);
+                                        },
+                                        error: function(xhr, status, error) {
+                                            if (error == "NOT FOUND") {
+                                                document.querySelector('#not_found_modal').showModal();
+                                            }
+                                            if (error == "BAD REQUEST") {
+                                                document.querySelector('#incorrect_password_modal').showModal();
+                                            }
+                                        }
+                                    });
+                                })
+                            );
+                        </script>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
